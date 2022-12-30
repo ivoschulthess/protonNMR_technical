@@ -22,3 +22,6 @@ def lorentzFitFct(f, f0, A, T2, p, o):
 
 def relaxationTime(t, P0, T2, A):
     return P0 * np.exp(-t/T2) + A
+
+def nmrSignal (t, f, a, p, t0):
+    return a * np.sin(2*np.pi*f*t - p*180/np.pi) * np.exp(-t/t0)
