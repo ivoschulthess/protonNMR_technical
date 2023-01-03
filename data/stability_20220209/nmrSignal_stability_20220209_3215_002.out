@@ -1,0 +1,34 @@
+Using SpinAPI Version: 20191127
+
+Filename                : /home/neutron/NMR/data/stability_20220209/nmrSignal_stability_20220209_3215_002
+Board Number            : 0
+Number of Points        : 128
+Number of Scans         : 200
+Use shape               : 0
+Bypass FIR              : 1
+Amplitude               : 1.000000
+Spectrometer Frequency  : 21.670000 MHz
+Spectral Width          : 128.000000 kHz
+TX Phase                : -140.000000 degrees
+Pulse Time              : 2.100000 us
+Trans Time              : 40.000000 us
+Repetition Delay        : 0.010000 s
+ADC Frequency           : 75.000000 MHz
+Enable Transmitter      : 1
+Enable Receiver         : 1
+Use TTL Blanking        : 1
+Blanking TTL Flag Bits  : 0x2
+Blanking Delay          : 3.000000 ms
+Debugging               : Disabled
+Actual Spectral Width   : 127986.348123 Hz
+Acquisition Time        : 1.000107 ms
+
+Specified Spectrometer Frequency : 21.670000 MHz
+Using Spectrometer Frequency: 21.670000 MHz.
+
+Total Experiment Time   : 2.200021 s
+
+Waiting for the data acquisition to complete...
+
+Resonance Frequency: 21.624005 MHz
+
