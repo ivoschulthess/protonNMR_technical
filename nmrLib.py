@@ -281,7 +281,6 @@ def plotRabiFrequencyScan (path, **kwargs):
     f_ref = popt[0], perr[0]
     a_ref = popt[1]*popt[2], np.sqrt(popt[1]**2*perr[2]**2 + popt[2]**2*perr[1]**2)
     p_ref = popt[3], perr[3]
-    o_ref = popt[4], perr[4]
     
     if 'lc' in kwargs:
         lc = kwargs.get('lc')
@@ -319,7 +318,7 @@ def plotRabiFrequencyScan (path, **kwargs):
     F_Fit = np.linspace(F_SF[0], F_SF[-1], 1001)
     Amp = np.zeros((2, len(F_SF)))
     for i,f_sf in enumerate(F_SF):
-        Amp[:,i] = analyze_signal(path+'nmrSignal_{:02d}.txt'.format(i), 128, f_ref=f_ref[0], p_ref=p_ref[0], o_ref=o_ref[0], verbose=0)
+        Amp[:,i] = analyze_signal(path+'nmrSignal_{:02d}.txt'.format(i), 128, f_ref=f_ref[0], p_ref=p_ref[0], verbose=0)
     Amp = Amp[0]/a_ref[0], np.sqrt(Amp[1]**2/a_ref[0]**2 + Amp[0]**2*a_ref[1]**2/a_ref[0]**4)
     popt, pcov = curve_fit(gaussFct, F_SF, Amp[0], sigma=Amp[1], absolute_sigma=True, p0=popt)
     perr = np.sqrt(np.diag(pcov))    
@@ -351,7 +350,6 @@ def plotRabiAmplitudeScan (path, ax, **kwargs):
     f_ref = popt[0], perr[0]
     a_ref = popt[1]*popt[2], np.sqrt(popt[1]**2*perr[2]**2 + popt[2]**2*perr[1]**2)
     p_ref = popt[3], perr[3]
-    o_ref = popt[4], perr[4]
     
     if 'lc' in kwargs:
         lc = kwargs.get('lc')
@@ -384,7 +382,7 @@ def plotRabiAmplitudeScan (path, ax, **kwargs):
     A_Fit = np.linspace(A_SF[0], 1000, 1001)
     Amp = np.zeros((2, len(A_SF)))
     for i,a_sf in enumerate(A_SF):
-        Amp[:,i] = analyze_signal(path+'nmrSignal_{:02d}.txt'.format(i), 128, f_ref=f_ref[0], p_ref=p_ref[0], o_ref=None, verbose=0)
+        Amp[:,i] = analyze_signal(path+'nmrSignal_{:02d}.txt'.format(i), 128, f_ref=f_ref[0], p_ref=p_ref[0], verbose=0)
     Amp = Amp[0]/a_ref[0], np.sqrt(Amp[1]**2/a_ref[0]**2 + Amp[0]**2*a_ref[1]**2/a_ref[0]**4)
     mask = (Amp[0]!=0) & (A_SF<=1000)
     ax.errorbar(A_SF[mask], Amp[0][mask], Amp[1][mask], fmt='{}{}'.format(lc,marker), ms=ms, lw=1, label=label)
@@ -397,3 +395,96 @@ def plotRabiAmplitudeScan (path, ax, **kwargs):
     ax.plot(A_Fit, sinExpFct(A_Fit, *popt), '{}-'.format(lc), lw=1)
     
     return popt, perr
+
+
+
+def plotRamseyFrequencyScan (path, ax, **kwargs):
+    
+    # reference
+    popt, perr = analyze_reference(path+'reference.txt', 128)
+    f_ref = popt[0], perr[0]
+    a_ref = popt[1]*popt[2], np.sqrt(popt[1]**2*perr[2]**2 + popt[2]**2*perr[1]**2)
+    p_ref = popt[3], perr[3]
+    
+    if 'lc' in kwargs:
+        lc = kwargs.get('lc')
+    else:
+        lc = ''
+        
+    if 'label' in kwargs:
+        label = kwargs.get('label')
+    else:
+        label = ''
+    
+    # signal
+    data = np.load(path+'ramseyFrequencyScan.npz')
+    F_SF = data['F_SF']
+    Amp = np.zeros((2, len(F_SF)))
+    for i,f_sf in enumerate(F_SF):
+        Amp[:,i] = analyze_signal(path+'nmrSignal_{:03d}.txt'.format(i), 128, f_ref=f_ref[0], p_ref=p_ref[0], verbose=0)
+    Amp = Amp[0]/a_ref[0], np.sqrt(Amp[1]**2/a_ref[0]**2 + Amp[0]**2*a_ref[1]**2/a_ref[0]**4)
+    ax.errorbar(F_SF, Amp[0], Amp[1], fmt='{}.-'.format(lc), ms=4, lw=0.5, elinewidth=0.5, label=label)
+
+
+def plotRamseyPhaseScan (path, **kwargs):
+    
+    # reference
+    popt, perr = analyze_reference(path+'reference.txt', 128, verbose=0)
+    f_ref = popt[0], perr[0]
+    a_ref = popt[1]*popt[2], np.sqrt(popt[1]**2*perr[2]**2 + popt[2]**2*perr[1]**2)
+    p_ref = popt[3], perr[3]
+    
+    if 'lc' in kwargs:
+        lc = kwargs.get('lc')
+    else:
+        lc = ''
+    if 'ms' in kwargs:
+        ms = float(kwargs.get('ms'))
+    else:
+        ms = None
+        
+    if 'marker' in kwargs:
+        marker = kwargs.get('marker')
+    else:
+        marker = '.'  
+        
+    if 'label' in kwargs:
+        label = kwargs.get('label')
+    else:
+        label = ''
+        
+    if 'shift' in kwargs:
+        shift = kwargs.get('shift')
+    else:
+        shift = 0
+    
+    if 'p0' in kwargs:
+        popt = kwargs.get('p0')
+    else:
+        popt = (1,0,0) 
+        
+    # signal
+    data = np.load(path+'ramseyPhaseScan.npz')
+    
+    By = weighted_mean(data['By'][0], data['By'][1])
+    
+    P_SF = data['P_SF']
+    P_Fit = np.linspace(0, 360, 1001)
+    Amp = np.zeros((2, len(P_SF)))
+    for i,p_sf in enumerate(P_SF):
+        Amp[:,i] = analyze_signal(path+'nmrSignal_{:02d}.txt'.format(i), 128, f_ref=f_ref[0], p_ref=p_ref[0], verbose=0)
+    Amp = Amp[0]/a_ref[0], np.sqrt(Amp[1]**2/a_ref[0]**2 + Amp[0]**2*a_ref[1]**2/a_ref[0]**4)
+    
+    popt, pcov = curve_fit(sinPhaseFct, P_SF-shift, Amp[0], sigma=Amp[1], absolute_sigma=True, p0=popt)
+    perr = np.sqrt(np.diag(pcov))
+    chi2 = np.sum((Amp[0]-sinPhaseFct(P_SF-shift, *popt))**2 / Amp[1]**2)
+    chi2_r = chi2 / (len(Amp[0]) - len(popt))
+    print('proton phase: {:.1f}({:.0f}) deg'.format(popt[1], 1e1*perr[1]))
+    print('reduced chi-squared: {:.1f}\n'.format(chi2_r))
+    
+    if 'ax' in kwargs:
+        ax = kwargs.get('ax')
+        ax.errorbar((P_SF-shift)%360, 0.8*Amp[0]/abs(popt[0])-popt[2], Amp[1], fmt='{}{}'.format(lc, marker), ms=ms, lw=1, label=label)
+        ax.plot(P_Fit, 0.8*sinPhaseFct(P_Fit, *popt)/abs(popt[0])-popt[2], '{}-'.format(lc), lw=1)
+    
+    return popt, perr, By
