@@ -1,9 +1,9 @@
 Using SpinAPI Version: 20191127
 
-Filename                : ../data/blochSiegertRabi_SF1_3500mV_0025mA_20220308_00/reference
+Filename                : ../data/rabiFrequencyScan_SF1_2500mV_0050mA_20220303/reference
 Board Number            : 0
 Number of Points        : 128
-Number of Scans         : 10000
+Number of Scans         : 1000
 Use shape               : 0
 Bypass FIR              : 1
 Amplitude               : 1.000000
@@ -12,7 +12,7 @@ Spectral Width          : 128.000000 kHz
 TX Phase                : -140.000000 degrees
 Pulse Time              : 2.100000 us
 Trans Time              : 40.000000 us
-Repetition Delay        : 0.002500 s
+Repetition Delay        : 0.010000 s
 ADC Frequency           : 75.000000 MHz
 Enable Transmitter      : 1
 Enable Receiver         : 1
@@ -26,9 +26,9 @@ Acquisition Time        : 1.000107 ms
 Specified Spectrometer Frequency : 21.670000 MHz
 Using Spectrometer Frequency: 21.670000 MHz.
 
-Total Experiment Time   : 35.001067 s
+Total Experiment Time   : 11.000107 s
 
 Waiting for the data acquisition to complete...
 
-Resonance Frequency: 21.681999 MHz
+Resonance Frequency: 21.680999 MHz
 
