@@ -3,6 +3,9 @@ import pandas as pd
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
+def linFct(a, x, b=0):
+    return a*x + b
+
 def ratio (A, B):
     ratio = A[0] / B[0]
     ratioErr = np.sqrt((A[1]/B[0])**2 + (A[0]*B[1]/B[0]**2)**2)
